@@ -1,0 +1,6 @@
+{
+    "repo_name": null,
+    "module_name": "{{ cookiecutter.repo_name.lower().replace('-', '_') }}",
+    "short_description": null,
+    "_extensions": ["jinja2_time.TimeExtension"]
+}
