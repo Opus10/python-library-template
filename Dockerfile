@@ -1,4 +1,4 @@
-FROM circleci/python:3.9.4
+FROM circleci/python:3.10.1
 
 # Install git 2.22 from source
 RUN sudo apt-get update
@@ -12,37 +12,46 @@ RUN cd /usr/src/ && \
     sudo make clean && \
     sudo rm -r /usr/src/git*
 
-# Pipx
-ENV PATH=/home/circleci/.local/bin:$PATH
-RUN pip install --user pipx
-RUN pipx install poetry
+# Poetry
+RUN sudo curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
 
-# Python 3.6.13
-RUN sudo curl -O https://www.python.org/ftp/python/3.6.13/Python-3.6.13.tgz
-RUN sudo tar -xvzf Python-3.6.13.tgz
-RUN cd Python-3.6.13 && sudo ./configure --prefix=/usr/
-RUN cd Python-3.6.13 && sudo make
-RUN cd Python-3.6.13 && sudo make install
+# Python 3.7.12
+RUN sudo curl -O https://www.python.org/ftp/python/3.7.12/Python-3.7.12.tgz && \
+    sudo tar -xvzf Python-3.7.12.tgz && \
+    cd Python-3.7.12 && \
+    sudo ./configure --prefix=/usr/ && \
+    sudo make && \
+    sudo make install && \
+    sudo make clean && \
+    cd .. && \
+    sudo rm -r Python-3.7.12
 
-# Python 3.7.10
-RUN sudo curl -O https://www.python.org/ftp/python/3.7.10/Python-3.7.10.tgz
-RUN sudo tar -xvzf Python-3.7.10.tgz
-RUN cd Python-3.7.10 && sudo ./configure --prefix=/usr/
-RUN cd Python-3.7.10 && sudo make
-RUN cd Python-3.7.10 && sudo make install
+# Python 3.8.11
+RUN sudo curl -O https://www.python.org/ftp/python/3.8.11/Python-3.8.11.tgz && \
+    sudo tar -xvzf Python-3.8.11.tgz && \
+    cd Python-3.8.11 && \
+    sudo ./configure --prefix=/usr/ && \
+    sudo make && \
+    sudo make install && \
+    sudo make clean && \
+    cd .. && \
+    sudo rm -r Python-3.8.11
 
-# Python 3.8.10
-RUN sudo curl -O https://www.python.org/ftp/python/3.8.10/Python-3.8.10.tgz
-RUN sudo tar -xvzf Python-3.8.10.tgz
-RUN cd Python-3.8.10 && sudo ./configure --prefix=/usr/
-RUN cd Python-3.8.10 && sudo make
-RUN cd Python-3.8.10 && sudo make install
+# Python 3.9.10
+RUN sudo curl -O https://www.python.org/ftp/python/3.9.10/Python-3.9.10.tgz && \
+    sudo tar -xvzf Python-3.9.10.tgz && \
+    cd Python-3.9.10 && \
+    sudo ./configure --prefix=/usr/ && \
+    sudo make && \
+    sudo make install && \
+    sudo make clean && \
+    cd .. && \
+    sudo rm -r Python-3.9.10
 
 RUN sudo apt-get install postgresql-client
-# Solves issues with pip
-# https://github.com/pypa/pip/issues/4924
-RUN sudo rm /usr/bin/lsb_release
 
-# Upgrade pip
-RUN pip install -U pip
-
+RUN sudo mkdir /code
+RUN sudo chmod 0777 /code
+WORKDIR /code
+ENV PATH=/code/.venv/bin:${PATH} \
+    POETRY_VIRTUALENVS_IN_PROJECT=true

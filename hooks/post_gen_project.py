@@ -210,9 +210,7 @@ def github_add_collaborators(
 
     github_client = GithubClient()
     collaborators_api = f'/teams/{team_id}/repos/{GITHUB_ORG_NAME}/{repo_name}'
-    github_client.put(
-        collaborators_api, json={'permission': permission}
-    )
+    github_client.put(collaborators_api, json={'permission': permission})
 
     return True
 
@@ -313,9 +311,10 @@ def circleci_configure_project_settings(repo_name):
         json={
             'feature_flags': {
                 'build-prs-only': True,
-                'autocancel-builds': True
+                'autocancel-builds': True,
             }
-        })
+        },
+    )
     resp.raise_for_status()
 
 
@@ -361,11 +360,11 @@ def temple_setup():
                     'ci/circleci: lint',
                     'ci/circleci: test',
                 ],
-                'strict': True
+                'strict': True,
             },
             'enforce_admins': False,
-            'restrictions': None
-        }
+            'restrictions': None,
+        },
     )
 
     print('Following the project on CircleCI.')
