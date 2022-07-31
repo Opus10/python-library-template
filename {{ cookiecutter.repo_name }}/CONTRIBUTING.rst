@@ -10,8 +10,8 @@ Setup
 
 Set up your development environment with::
 
-    git clone git@github.com:Opus10/{{cookiecutter.repo_name}}.git
-    cd {{cookiecutter.repo_name}}
+    git clone git@github.com:Opus10/{{ cookiecutter.repo_name }}.git
+    cd {{ cookiecutter.repo_name }}
     make setup
 
 ``make setup`` will set up a development environment managed by Docker.
@@ -79,7 +79,7 @@ Releases and Versioning
 
 Anything that is merged into the master branch will be automatically deployed
 to PyPI. Documentation will be published to a ReadTheDocs at
-``https://{{cookiecutter.repo_name}}.readthedocs.io/``.
+``https://{{ cookiecutter.repo_name }}.readthedocs.io/``.
 
 The following files will be generated and should *not* be edited by a user:
 

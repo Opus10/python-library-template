@@ -8,9 +8,9 @@ import sys
 import requests
 
 
-REPO_NAME = "{{cookiecutter.repo_name}}"
-MODULE_NAME = "{{cookiecutter.module_name}}"
-DESCRIPTION = "{{cookiecutter.short_description}}"
+REPO_NAME = "{{ cookiecutter.repo_name }}"
+MODULE_NAME = "{{ cookiecutter.module_name }}"
+DESCRIPTION = "{{ cookiecutter.short_description }}"
 TEMPLE_ENV_VAR = '_TEMPLE'
 GITHUB_API_TOKEN_ENV_VAR = 'GITHUB_API_TOKEN'
 GITHUB_ORG_NAME = 'Opus10'
@@ -34,13 +34,9 @@ class CredentialsError(Error):
     """Thrown when the user does not have valid credentials to use template"""
 
 
-def _shell(
-    cmd, check=True, stdin=None, stdout=None, stderr=None
-):  # pragma: no cover
+def _shell(cmd, check=True, stdin=None, stdout=None, stderr=None):  # pragma: no cover
     """Runs a subprocess shell with check=True by default"""
-    return subprocess.run(
-        cmd, shell=True, check=check, stdin=stdin, stdout=stdout, stderr=stderr
-    )
+    return subprocess.run(cmd, shell=True, check=check, stdin=stdin, stdout=stdout, stderr=stderr)
 
 
 def get_user_input(prompt_text):
@@ -161,13 +157,8 @@ def github_create_repo(
         },
     )
 
-    repo_already_exists = (
-        resp.json().get('message') == 'Repository creation failed.'
-    )
-    if (
-        resp.status_code == requests.codes.unprocessable
-        and repo_already_exists
-    ):
+    repo_already_exists = resp.json().get('message') == 'Repository creation failed.'
+    if resp.status_code == requests.codes.unprocessable and repo_already_exists:
         msg = (
             'Remote github repo already exists at'
             f' https://github.com/{GITHUB_ORG_NAME}/{repo_name}.git.'
@@ -182,15 +173,12 @@ def github_create_repo(
             raise RemoteRepoExistsError(msg)
     elif resp.status_code != requests.codes.created:
         print(
-            f'An error happened during git repo creation - "{resp.json()}"',
-            file=sys.stderr,
+            f'An error happened during git repo creation - "{resp.json()}"', file=sys.stderr,
         )
         resp.raise_for_status()
 
 
-def github_add_collaborators(
-    repo_name, team_id, team_name, permission, prompt=True
-):
+def github_add_collaborators(repo_name, team_id, team_name, permission, prompt=True):
     """Adds Githbub collaborators for a repo
 
     Args:
@@ -227,9 +215,7 @@ def github_setup_branch_protection(repo_name, branch, branch_protection):
             for examples on the required input
     """
     github_client = GithubClient()
-    protection_api = (
-        f'/repos/{GITHUB_ORG_NAME}/{repo_name}/branches/{branch}/protection'
-    )
+    protection_api = f'/repos/{GITHUB_ORG_NAME}/{repo_name}/branches/{branch}/protection'
     github_client.put(
         protection_api,
         json=branch_protection,
@@ -238,9 +224,7 @@ def github_setup_branch_protection(repo_name, branch, branch_protection):
 
 
 def github_push_initial_repo(
-    repo_name,
-    initial_commit=['Initial scaffolding [skip ci]', 'Type: trivial'],
-    prompt=True,
+    repo_name, initial_commit=['Initial scaffolding [skip ci]', 'Type: trivial'], prompt=True,
 ):
     """Initializes local and remote Github repositories from a temple project
 
@@ -276,8 +260,7 @@ def _get_circleci_api_and_auth(repo_name):
     circleci_api_token = os.environ[CIRCLECI_API_TOKEN_ENV_VAR]
     circleci_auth = requests.auth.HTTPBasicAuth(circleci_api_token, '')
     circleci_api = (
-        f'https://circleci.com/api/v1.1/project/github/{GITHUB_ORG_NAME}'
-        f'/{repo_name}'
+        f'https://circleci.com/api/v1.1/project/github/{GITHUB_ORG_NAME}' f'/{repo_name}'
     )
     return circleci_api, circleci_auth
 
@@ -311,6 +294,7 @@ def circleci_configure_project_settings(repo_name):
         json={
             'feature_flags': {
                 'build-prs-only': True,
+                'build-fork-prs': True,
                 'autocancel-builds': True,
             }
         },
@@ -340,8 +324,7 @@ def temple_setup():
         )
 
     print(
-        f'Creating the github repository at https://github.com/'
-        f'{GITHUB_ORG_NAME}/{REPO_NAME}'
+        f'Creating the github repository at https://github.com/' f'{GITHUB_ORG_NAME}/{REPO_NAME}'
     )
     github_create_repo(REPO_NAME, DESCRIPTION)
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# {{cookiecutter.repo_name}} documentation build configuration file, created by
+# {{ cookiecutter.repo_name }} documentation build configuration file, created by
 # sphinx-quickstart on Tue Feb 28 09:45:59 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -25,6 +25,8 @@ import sys
 
 import django
 import sphinx_rtd_theme
+
+import {{ cookiecutter.module_name }}
 
 
 sys.path.insert(0, os.path.abspath('.'))
@@ -76,7 +78,7 @@ master_doc = 'toc'
 default_role = 'any'
 
 # General information about the project.
-project = u'{{cookiecutter.repo_name}}'
+project = u'{{ cookiecutter.repo_name }}'
 copyright = u'2022, Opus 10'
 author = u'Opus 10 Engineering'
 
@@ -85,7 +87,7 @@ author = u'Opus 10 Engineering'
 # built documents.
 #
 # The short X.Y version.
-version = _shell_stdout("poetry version | rev | cut -f 1 -d' ' | rev")
+version = {{ cookiecutter.module_name }}.__version__
 
 # The full version, including alpha/beta/rc tags.
 release = version
@@ -132,7 +134,7 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = '{{cookiecutter.repo_name}}doc'
+htmlhelp_basename = '{{ cookiecutter.repo_name }}doc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -158,8 +160,8 @@ latex_elements = {
 latex_documents = [
     (
         master_doc,
-        '{{cookiecutter.repo_name}}.tex',
-        u'{{cookiecutter.repo_name}} Documentation',
+        '{{ cookiecutter.repo_name }}.tex',
+        u'{{ cookiecutter.repo_name }} Documentation',
         u'Opus 10',
         'manual',
     )
@@ -173,8 +175,8 @@ latex_documents = [
 man_pages = [
     (
         master_doc,
-        '{{cookiecutter.repo_name}}',
-        u'{{cookiecutter.repo_name}} Documentation',
+        '{{ cookiecutter.repo_name }}',
+        u'{{ cookiecutter.repo_name }} Documentation',
         [author],
         1,
     )
@@ -189,11 +191,11 @@ man_pages = [
 texinfo_documents = [
     (
         master_doc,
-        '{{cookiecutter.repo_name}}',
-        u'{{cookiecutter.repo_name}} Documentation',
+        '{{ cookiecutter.repo_name }}',
+        u'{{ cookiecutter.repo_name }} Documentation',
         author,
-        '{{cookiecutter.repo_name}}',
-        '{{cookiecutter.short_description}}',
+        '{{ cookiecutter.repo_name }}',
+        '{{ cookiecutter.short_description }}',
         'Miscellaneous',
     )
 ]
