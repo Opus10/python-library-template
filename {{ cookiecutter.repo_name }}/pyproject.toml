@@ -9,7 +9,7 @@ skip-string-normalization = true
 
 [tool.coverage.run]
 branch = true
-source = ["{{cookiecutter.module_name}}"]
+source = ["{{ cookiecutter.module_name }}"]
 
 [tool.coverage.report]
 exclude_lines = [
@@ -23,12 +23,12 @@ show_missing = true
 fail_under = 100
 
 [tool.poetry]
-name = "{{cookiecutter.repo_name}}"
+name = "{{ cookiecutter.repo_name }}"
 packages = [
-  { include = "{{cookiecutter.module_name}}" }
+  { include = "{{ cookiecutter.module_name }}" }
 ]
 version = "0.0.0"
-description = "{{cookiecutter.short_description}}"
+description = "{{ cookiecutter.short_description }}"
 authors = ["Opus 10 Engineering"]
 classifiers = [
   "Intended Audience :: Developers",
@@ -43,16 +43,17 @@ classifiers = [
 ]
 license = "BSD-3-Clause"
 readme = "README.rst"
-homepage = "https://github.com/Opus10/{{cookiecutter.repo_name}}"
-repository = "https://github.com/Opus10/{{cookiecutter.repo_name}}"
-documentation = "https://{{cookiecutter.repo_name}}.readthedocs.io"
+homepage = "https://github.com/Opus10/{{ cookiecutter.repo_name }}"
+repository = "https://github.com/Opus10/{{ cookiecutter.repo_name }}"
+documentation = "https://{{ cookiecutter.repo_name }}.readthedocs.io"
 
 [tool.poetry.dependencies]
 python = ">=3.7.0,<4"
 django = ">=2"
+importlib_metadata = { version = ">=4", python = "~3.7" }
 
 [tool.poetry.dev-dependencies]
-black = "21.5b1"
+black = "22.6.0"
 dj-database-url = "0.5.0"
 flake8 = "3.9.2"
 flake8-bugbear = "22.1.11"
@@ -79,6 +80,6 @@ zipp = "3.4.1"
 [tool.pytest.ini_options]
 xfail_strict = true
 addopts = "--reuse-db"
-testpaths = "{{cookiecutter.module_name}}/tests"
+testpaths = "{{ cookiecutter.module_name }}/tests"
 norecursedirs = ".venv"
 DJANGO_SETTINGS_MODULE = "settings"

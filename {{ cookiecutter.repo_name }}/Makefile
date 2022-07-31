@@ -1,4 +1,4 @@
-# Makefile for packaging and testing {{cookiecutter.repo_name}}
+# Makefile for packaging and testing {{ cookiecutter.repo_name }}
 #
 # This Makefile has the following targets:
 #
@@ -16,8 +16,8 @@
 
 OS = $(shell uname -s)
 
-PACKAGE_NAME={{cookiecutter.repo_name}}
-MODULE_NAME={{cookiecutter.module_name}}
+PACKAGE_NAME={{ cookiecutter.repo_name }}
+MODULE_NAME={{ cookiecutter.module_name }}
 SHELL=bash
 
 ifeq (${OS}, Linux)

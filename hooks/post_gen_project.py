@@ -8,9 +8,9 @@ import sys
 import requests
 
 
-REPO_NAME = "{{cookiecutter.repo_name}}"
-MODULE_NAME = "{{cookiecutter.module_name}}"
-DESCRIPTION = "{{cookiecutter.short_description}}"
+REPO_NAME = "{{ cookiecutter.repo_name }}"
+MODULE_NAME = "{{ cookiecutter.module_name }}"
+DESCRIPTION = "{{ cookiecutter.short_description }}"
 TEMPLE_ENV_VAR = '_TEMPLE'
 GITHUB_API_TOKEN_ENV_VAR = 'GITHUB_API_TOKEN'
 GITHUB_ORG_NAME = 'Opus10'
