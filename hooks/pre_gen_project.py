@@ -4,7 +4,7 @@
 This script ensures that python package and module names are
 valid.
 
-Note that this runs during ``temple setup`` and ``temple update``
+Note that this runs during ``footing setup`` and ``footing update``
 """
 import re
 import sys

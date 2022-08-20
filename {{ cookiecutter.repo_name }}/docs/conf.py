@@ -88,7 +88,7 @@ author = "Opus 10 Engineering"
 # built documents.
 #
 # The short X.Y version.
-version = {{cookiecutter.module_name}}.__version__
+version = {{ cookiecutter.module_name }}.__version__
 
 # The full version, including alpha/beta/rc tags.
 release = version

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prompts the user and runs project setup during ``temple setup``"""
+"""Prompts the user and runs project setup during ``footing setup``"""
 import os
 import re
 import subprocess
@@ -11,7 +11,7 @@ import requests
 REPO_NAME = "{{ cookiecutter.repo_name }}"
 MODULE_NAME = "{{ cookiecutter.module_name }}"
 DESCRIPTION = "{{ cookiecutter.short_description }}"
-TEMPLE_ENV_VAR = "_TEMPLE"
+FOOTING_ENV_VAR = "_FOOTING"
 GITHUB_API_TOKEN_ENV_VAR = "GITHUB_API_TOKEN"
 GITHUB_ORG_NAME = "Opus10"
 GITHUB_REPO_API = f"/orgs/{GITHUB_ORG_NAME}/repos"
@@ -229,7 +229,7 @@ def github_push_initial_repo(
     initial_commit=["Initial scaffolding [skip ci]", "Type: trivial"],
     prompt=True,
 ):
-    """Initializes local and remote Github repositories from a temple project
+    """Initializes local and remote Github repositories from a footing project
 
     Args:
         repo_name (str): The repository name
@@ -305,7 +305,7 @@ def circleci_configure_project_settings(repo_name):
     resp.raise_for_status()
 
 
-def temple_setup():
+def footing_setup():
     # Make sure requests is installed
     print("Installing requests library for repository setup...")
     _shell("pip3 install requests")
@@ -376,17 +376,17 @@ def temple_setup():
 
 if __name__ == "__main__":
     # Don't allow this template to be used by other tools like cookiecutter
-    if not os.getenv(TEMPLE_ENV_VAR):
+    if not os.getenv(FOOTING_ENV_VAR):
         print(
-            "This template can only be used with temple for project spin up. "
-            "Consult the temple docs at https://github.com/CloverHealth/temple"
+            "This template can only be used with footing for project spin up. "
+            "Consult the footing docs at https://github.com/Opus10/footing"
         )
         sys.exit(1)
 
-    # Ensure that temple setup only gets executed when ``_TEMPLE`` is set to
+    # Ensure that footing setup only gets executed when ``_FOOTING`` is set to
     # ``setup``. This means that setup steps will not be executed by other
-    # temple commands (e.g ``temple update``)
-    if os.getenv(TEMPLE_ENV_VAR) == "setup":
+    # footing commands (e.g ``footing update``)
+    if os.getenv(FOOTING_ENV_VAR) == "setup":
         prompt_msg = (
             f'Your Opus 10 Github repo name will be "{REPO_NAME}"'
             f' and packages will be installed with "pip install {REPO_NAME}".'
@@ -396,7 +396,7 @@ if __name__ == "__main__":
             " Continue (y) or change parameters (n)?"
         )
         if yesno(prompt_msg):
-            temple_setup()
+            footing_setup()
         else:
             print("Setup aborted. Please try again with new parameters.")
             sys.exit(1)
