@@ -6,15 +6,15 @@ app deployed using CircleCI to PyPI.
 
 This is a `cookiecutter <https://cookiecutter.readthedocs.io/en/latest/>`__
 template that can be used by
-`temple <https://github.com/CloverHealth/temple/>`__ to create and manage the
+`footing <https://github.com/Opus10/footing/>`__ to create and manage the
 project.
 
 A new public Django app can be started with::
 
-    pip3 install temple
-    temple setup git@github.com:Opus10/public-django-app-template.git
+    pip3 install footing
+    footing setup git@github.com:Opus10/public-django-app-template.git
 
-**Note** when calling ``temple setup``, a project will be created locally and
+**Note** when calling ``footing setup``, a project will be created locally and
 it will also be set up on Github and CircleCI for continuous deployment.
 Do **not** create anything on Github or CircleCI before using this template.
 
@@ -35,7 +35,7 @@ information on how this template is used in practice.
 Template Parameters
 ===================
 
-When calling ``temple setup``, the user will be prompted for template
+When calling ``footing setup``, the user will be prompted for template
 parameters. These parameters are defined in the cookiecutter.json file and are
 as follows:
 
@@ -48,13 +48,13 @@ as follows:
 3. ``short_description``: A short description of the project. This will be
    added as the Github repo description and the description in the
    `setup.cfg` file. It will also be the description displayed when users do
-   ``temple ls`` to list this project.
+   ``footing ls github.com/Opus10`` to list this project.
 
 What Does This Template Provide?
 ================================
 
 When using this template with
-``temple setup git@github.com:Opus10/public-django-app-template.git``,
+``footing setup git@github.com:Opus10/public-django-app-template.git``,
 the ``hooks/pre_gen_project.py`` and ``hooks/post_gen_project.py`` files will
 be called to bootstrap your Python project. The following steps are taken:
 _
@@ -112,16 +112,16 @@ An Important Note to Users
 By using this template for your Python project, you are agreeing that you will
 keep your project up to date with this template whenever it changes. You will
 know that your project is out of date when CircleCI runs the
-``temple update --check`` command in the ``.circleci/config.yaml`` file of the
-project. When this happens, you can run ``temple update`` locally in your
+``footing update --check`` command in the ``.circleci/config.yaml`` file of the
+project. When this happens, you can run ``footing update`` locally in your
 project repo to pull in the latest template updates.
 
 **Note** If you must do a release because of emergency circumstances, comment
-out ``temple update --check`` in the ``.cirlceci/config.yaml`` file to
+out ``footing update --check`` in the ``.cirlceci/config.yaml`` file to
 temporarily bypass the template check.
 
 It is important to keep any changes to the templated files of this project to
-a minimum, otherwise ``temple update`` will produce diffs that can be
+a minimum, otherwise ``footing update`` will produce diffs that can be
 difficult to merge. Along with that, minimally editing the templated files
 ensures that your Python library project behaves similarly to all of the other
 ones at Opus 10. If there is an error in the templated files or a change that
@@ -163,10 +163,10 @@ For some examples of projects that make use of Sphinx, check out the following
 documentation folders for the following:
 
 1. `stor <https://github.com/counsyl/stor/tree/master/docs>`__
-2. `temple <https://github.com/CloverHealth/temple/tree/master/docs>`__
+2. `footing <https://github.com/Opus10/footing/tree/master/docs>`__
 
 Remember that one can also perform
-``temple ls git@github.com:Opus10/public-django-app-template.git`` to see a
+``footing ls github.com/Opus10 git@github.com:Opus10/public-django-app-template.git`` to see a
 list of all projects spun up with this template for examples at Opus 10.
 
 Building docs also comes with this template. In order to build and look at docs

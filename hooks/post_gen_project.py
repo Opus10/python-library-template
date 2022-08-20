@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prompts the user and runs project setup during ``temple setup``"""
+"""Prompts the user and runs project setup during ``footing setup``"""
 import os
 import re
 import subprocess
@@ -11,11 +11,11 @@ import requests
 REPO_NAME = "{{ cookiecutter.repo_name }}"
 MODULE_NAME = "{{ cookiecutter.module_name }}"
 DESCRIPTION = "{{ cookiecutter.short_description }}"
-TEMPLE_ENV_VAR = '_TEMPLE'
-GITHUB_API_TOKEN_ENV_VAR = 'GITHUB_API_TOKEN'
-GITHUB_ORG_NAME = 'Opus10'
-GITHUB_REPO_API = f'/orgs/{GITHUB_ORG_NAME}/repos'
-CIRCLECI_API_TOKEN_ENV_VAR = 'CIRCLECI_API_TOKEN'
+FOOTING_ENV_VAR = "_FOOTING"
+GITHUB_API_TOKEN_ENV_VAR = "GITHUB_API_TOKEN"
+GITHUB_ORG_NAME = "Opus10"
+GITHUB_REPO_API = f"/orgs/{GITHUB_ORG_NAME}/repos"
+CIRCLECI_API_TOKEN_ENV_VAR = "CIRCLECI_API_TOKEN"
 
 
 class Error(Exception):
@@ -43,35 +43,35 @@ def get_user_input(prompt_text):
     return input(prompt_text).strip()
 
 
-def yesno(message, default='yes', suffix=' '):
+def yesno(message, default="yes", suffix=" "):
     """Prompt user to answer yes or no.
 
     Return True if the default is chosen, otherwise False.
     """
-    if default == 'yes':
-        yesno_prompt = '[Y/n]'
-    elif default == 'no':
-        yesno_prompt = '[y/N]'
+    if default == "yes":
+        yesno_prompt = "[Y/n]"
+    elif default == "no":
+        yesno_prompt = "[y/N]"
     else:
         raise ValueError("default must be 'yes' or 'no'.")
 
-    if message != '':
-        prompt_text = f'{message} {yesno_prompt}{suffix}'
+    if message != "":
+        prompt_text = f"{message} {yesno_prompt}{suffix}"
     else:
-        prompt_text = f'{yesno_prompt}{suffix}'
+        prompt_text = f"{yesno_prompt}{suffix}"
 
     while True:
         response = get_user_input(prompt_text)
-        if response == '':
+        if response == "":
             return True
         else:
-            if re.match('^(y)(es)?$', response, re.IGNORECASE):
-                if default == 'yes':
+            if re.match("^(y)(es)?$", response, re.IGNORECASE):
+                if default == "yes":
                     return True
                 else:
                     return False
-            elif re.match('^(n)(o)?$', response, re.IGNORECASE):
-                if default == 'no':
+            elif re.match("^(n)(o)?$", response, re.IGNORECASE):
+                if default == "no":
                     return True
                 else:
                     return False
@@ -90,9 +90,9 @@ class GithubClient:
             verb (str): Can be "post", "put", or "get"
             url (str): The base URL with a leading slash for Github API (v3)
         """
-        api = 'https://api.github.com{}'.format(url)
-        auth_headers = {'Authorization': 'token {}'.format(self.api_token)}
-        headers = {**auth_headers, **request_kwargs.pop('headers', {})}
+        api = "https://api.github.com{}".format(url)
+        auth_headers = {"Authorization": "token {}".format(self.api_token)}
+        headers = {**auth_headers, **request_kwargs.pop("headers", {})}
         resp = getattr(requests, verb)(api, headers=headers, **request_kwargs)
         if check:
             resp.raise_for_status()
@@ -100,19 +100,19 @@ class GithubClient:
 
     def get(self, url, check=True, **request_kwargs):
         """Github API get"""
-        return self._call_api('get', url, check=check, **request_kwargs)
+        return self._call_api("get", url, check=check, **request_kwargs)
 
     def post(self, url, check=True, **request_kwargs):
         """Github API post"""
-        return self._call_api('post', url, check=check, **request_kwargs)
+        return self._call_api("post", url, check=check, **request_kwargs)
 
     def put(self, url, check=True, **request_kwargs):
         """Github API put"""
-        return self._call_api('put', url, check=check, **request_kwargs)
+        return self._call_api("put", url, check=check, **request_kwargs)
 
     def patch(self, url, check=True, **request_kwargs):
         """Github API patch"""
-        return self._call_api('patch', url, check=check, **request_kwargs)
+        return self._call_api("patch", url, check=check, **request_kwargs)
 
 
 def github_create_repo(
@@ -147,33 +147,34 @@ def github_create_repo(
         GITHUB_REPO_API,
         check=False,
         json={
-            'name': repo_name,
-            'description': short_description,
-            'private': False,
-            'has_wiki': has_wiki,
-            'allow_squash_merge': not disable_squash_merge,
-            'allow_merge_commit': not disable_merge_commit,
-            'allow_rebase_merge': not disable_rebase_merge,
+            "name": repo_name,
+            "description": short_description,
+            "private": False,
+            "has_wiki": has_wiki,
+            "allow_squash_merge": not disable_squash_merge,
+            "allow_merge_commit": not disable_merge_commit,
+            "allow_rebase_merge": not disable_rebase_merge,
         },
     )
 
-    repo_already_exists = resp.json().get('message') == 'Repository creation failed.'
+    repo_already_exists = resp.json().get("message") == "Repository creation failed."
     if resp.status_code == requests.codes.unprocessable and repo_already_exists:
         msg = (
-            'Remote github repo already exists at'
-            f' https://github.com/{GITHUB_ORG_NAME}/{repo_name}.git.'
+            "Remote github repo already exists at"
+            f" https://github.com/{GITHUB_ORG_NAME}/{repo_name}.git."
         )
 
         prompt_msg = (
-            f'{msg} This can be from a previously failed setup run or'
-            ' because someone else already created the repository.'
-            ' Continue without creating (y) or abort (n)?'
+            f"{msg} This can be from a previously failed setup run or"
+            " because someone else already created the repository."
+            " Continue without creating (y) or abort (n)?"
         )
-        if prompt and yesno(prompt_msg, default='no'):
+        if prompt and yesno(prompt_msg, default="no"):
             raise RemoteRepoExistsError(msg)
     elif resp.status_code != requests.codes.created:
         print(
-            f'An error happened during git repo creation - "{resp.json()}"', file=sys.stderr,
+            f'An error happened during git repo creation - "{resp.json()}"',
+            file=sys.stderr,
         )
         resp.raise_for_status()
 
@@ -191,14 +192,14 @@ def github_add_collaborators(repo_name, team_id, team_name, permission, prompt=T
     """
     msg = (
         'Add {} access for the "{}" team on {} (if not, permissions will need'
-        ' to be configured later)?'
+        " to be configured later)?"
     ).format(permission, team_name, repo_name)
-    if prompt and not yesno(msg, default='yes'):
+    if prompt and not yesno(msg, default="yes"):
         return False
 
     github_client = GithubClient()
-    collaborators_api = f'/teams/{team_id}/repos/{GITHUB_ORG_NAME}/{repo_name}'
-    github_client.put(collaborators_api, json={'permission': permission})
+    collaborators_api = f"/teams/{team_id}/repos/{GITHUB_ORG_NAME}/{repo_name}"
+    github_client.put(collaborators_api, json={"permission": permission})
 
     return True
 
@@ -215,18 +216,20 @@ def github_setup_branch_protection(repo_name, branch, branch_protection):
             for examples on the required input
     """
     github_client = GithubClient()
-    protection_api = f'/repos/{GITHUB_ORG_NAME}/{repo_name}/branches/{branch}/protection'
+    protection_api = f"/repos/{GITHUB_ORG_NAME}/{repo_name}/branches/{branch}/protection"
     github_client.put(
         protection_api,
         json=branch_protection,
-        headers={'Accept': 'application/vnd.github.loki-preview+json'},
+        headers={"Accept": "application/vnd.github.loki-preview+json"},
     )
 
 
 def github_push_initial_repo(
-    repo_name, initial_commit=['Initial scaffolding [skip ci]', 'Type: trivial'], prompt=True,
+    repo_name,
+    initial_commit=["Initial scaffolding [skip ci]", "Type: trivial"],
+    prompt=True,
 ):
-    """Initializes local and remote Github repositories from a temple project
+    """Initializes local and remote Github repositories from a footing project
 
     Args:
         repo_name (str): The repository name
@@ -234,33 +237,33 @@ def github_push_initial_repo(
             the repo.
         prompt (bool, default=True): Prompt to continue on failure
     """
-    remote = f'git@github.com:{GITHUB_ORG_NAME}/{repo_name}.git'
+    remote = f"git@github.com:{GITHUB_ORG_NAME}/{repo_name}.git"
     if isinstance(initial_commit, str):
         initial_commit = [initial_commit]
 
-    _shell('git init')
-    _shell('git add .')
-    _shell('git commit ' + ' '.join(f'-m "{msg}"' for msg in initial_commit))
-    _shell(f'git remote add origin {remote}')
+    _shell("git init")
+    _shell("git add .")
+    _shell("git commit " + " ".join(f'-m "{msg}"' for msg in initial_commit))
+    _shell(f"git remote add origin {remote}")
 
-    ret = _shell('git push origin master', check=False)
+    ret = _shell("git push origin master", check=False)
     if ret.returncode != 0:
-        msg = 'There was an error when pushing the initial repository.'
+        msg = "There was an error when pushing the initial repository."
         prompt_msg = (
-            f'{msg} This could be because the initial repository has already'
-            ' been set up or because the repository previously existed.'
-            ' Continue without pushing (y) or abort (n)?'
+            f"{msg} This could be because the initial repository has already"
+            " been set up or because the repository previously existed."
+            " Continue without pushing (y) or abort (n)?"
         )
-        if prompt and yesno(prompt_msg, default='no'):
+        if prompt and yesno(prompt_msg, default="no"):
             raise GithubPushError(msg)
 
 
 def _get_circleci_api_and_auth(repo_name):
     """Returns the CircleCI API url and auth"""
     circleci_api_token = os.environ[CIRCLECI_API_TOKEN_ENV_VAR]
-    circleci_auth = requests.auth.HTTPBasicAuth(circleci_api_token, '')
+    circleci_auth = requests.auth.HTTPBasicAuth(circleci_api_token, "")
     circleci_api = (
-        f'https://circleci.com/api/v1.1/project/github/{GITHUB_ORG_NAME}' f'/{repo_name}'
+        f"https://circleci.com/api/v1.1/project/github/{GITHUB_ORG_NAME}" f"/{repo_name}"
     )
     return circleci_api, circleci_auth
 
@@ -273,7 +276,7 @@ def circleci_follow(repo_name):
     """
     circleci_api, circleci_auth = _get_circleci_api_and_auth(repo_name)
     # Follow the repository
-    resp = requests.post(f'{circleci_api}/follow', auth=circleci_auth)
+    resp = requests.post(f"{circleci_api}/follow", auth=circleci_auth)
     resp.raise_for_status()
 
 
@@ -289,80 +292,80 @@ def circleci_configure_project_settings(repo_name):
     circleci_api, circleci_auth = _get_circleci_api_and_auth(repo_name)
     # Follow the repository
     resp = requests.put(
-        f'{circleci_api}/settings',
+        f"{circleci_api}/settings",
         auth=circleci_auth,
         json={
-            'feature_flags': {
-                'build-prs-only': True,
-                'build-fork-prs': True,
-                'autocancel-builds': True,
+            "feature_flags": {
+                "build-prs-only": True,
+                "build-fork-prs": True,
+                "autocancel-builds": True,
             }
         },
     )
     resp.raise_for_status()
 
 
-def temple_setup():
+def footing_setup():
     # Make sure requests is installed
-    print('Installing requests library for repository setup...')
-    _shell('pip3 install requests')
+    print("Installing requests library for repository setup...")
+    _shell("pip3 install requests")
 
-    print('Checking credentials.')
+    print("Checking credentials.")
     if not os.getenv(GITHUB_API_TOKEN_ENV_VAR):
         raise CredentialsError(
             f'You must set a "{GITHUB_API_TOKEN_ENV_VAR}" environment variable'
-            ' with repo creation permissions in order to spin up a public'
-            ' python library project. Create a personal access token'
-            ' at https://github.com/settings/tokens'
+            " with repo creation permissions in order to spin up a public"
+            " python library project. Create a personal access token"
+            " at https://github.com/settings/tokens"
         )
 
     if not os.getenv(CIRCLECI_API_TOKEN_ENV_VAR):
         raise CredentialsError(
             f'You must set a "{CIRCLECI_API_TOKEN_ENV_VAR}" environment'
-            ' variable in order for public python library creation to work.'
-            ' Create a token at https://circleci.com/account/api'
+            " variable in order for public python library creation to work."
+            " Create a token at https://circleci.com/account/api"
         )
 
     print(
-        f'Creating the github repository at https://github.com/' f'{GITHUB_ORG_NAME}/{REPO_NAME}'
+        f"Creating the github repository at https://github.com/" f"{GITHUB_ORG_NAME}/{REPO_NAME}"
     )
     github_create_repo(REPO_NAME, DESCRIPTION)
 
-    print('Creating initial repository and pushing to master.')
+    print("Creating initial repository and pushing to master.")
     github_push_initial_repo(REPO_NAME)
 
-    print('Setting up default branch protection.')
+    print("Setting up default branch protection.")
     github_setup_branch_protection(
         REPO_NAME,
-        'master',
+        "master",
         {
-            'required_pull_request_reviews': None,
-            'required_status_checks': {
-                'contexts': [
-                    'ci/circleci: check_changelog',
-                    'ci/circleci: lint',
-                    'ci/circleci: test',
+            "required_pull_request_reviews": None,
+            "required_status_checks": {
+                "contexts": [
+                    "ci/circleci: check_changelog",
+                    "ci/circleci: lint",
+                    "ci/circleci: test",
                 ],
-                'strict': True,
+                "strict": True,
             },
-            'enforce_admins': False,
-            'restrictions': None,
+            "enforce_admins": False,
+            "restrictions": None,
         },
     )
 
-    print('Following the project on CircleCI.')
+    print("Following the project on CircleCI.")
     circleci_follow(REPO_NAME)
 
-    print('Configuring CircleCI project settings.')
+    print("Configuring CircleCI project settings.")
     circleci_configure_project_settings(REPO_NAME)
 
     get_user_input(
-        'Final step! Go to'
-        ' https://github.com/Opus10/public-django-app-template'
-        '#readthedocs-setup'
-        ' and read the instructions for ReadTheDocs integration. If you bypass'
+        "Final step! Go to"
+        " https://github.com/Opus10/public-django-app-template"
+        "#readthedocs-setup"
+        " and read the instructions for ReadTheDocs integration. If you bypass"
         ' this step, your docs will not build properly. Hit "return" after'
-        ' you have done this.'
+        " you have done this."
     )
 
     print(
@@ -371,29 +374,29 @@ def temple_setup():
     )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Don't allow this template to be used by other tools like cookiecutter
-    if not os.getenv(TEMPLE_ENV_VAR):
+    if not os.getenv(FOOTING_ENV_VAR):
         print(
-            'This template can only be used with temple for project spin up. '
-            'Consult the temple docs at https://github.com/CloverHealth/temple'
+            "This template can only be used with footing for project spin up. "
+            "Consult the footing docs at https://github.com/Opus10/footing"
         )
         sys.exit(1)
 
-    # Ensure that temple setup only gets executed when ``_TEMPLE`` is set to
+    # Ensure that footing setup only gets executed when ``_FOOTING`` is set to
     # ``setup``. This means that setup steps will not be executed by other
-    # temple commands (e.g ``temple update``)
-    if os.getenv(TEMPLE_ENV_VAR) == 'setup':
+    # footing commands (e.g ``footing update``)
+    if os.getenv(FOOTING_ENV_VAR) == "setup":
         prompt_msg = (
             f'Your Opus 10 Github repo name will be "{REPO_NAME}"'
             f' and packages will be installed with "pip install {REPO_NAME}".'
             f' Python imports will happen as "import {MODULE_NAME}".'
-            ' It is very difficult to change these names after the project'
-            ' is started, so please be sure these are the names you want!'
-            ' Continue (y) or change parameters (n)?'
+            " It is very difficult to change these names after the project"
+            " is started, so please be sure these are the names you want!"
+            " Continue (y) or change parameters (n)?"
         )
         if yesno(prompt_msg):
-            temple_setup()
+            footing_setup()
         else:
-            print('Setup aborted. Please try again with new parameters.')
+            print("Setup aborted. Please try again with new parameters.")
             sys.exit(1)
