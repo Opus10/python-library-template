@@ -1,57 +1,51 @@
-FROM circleci/python:3.10.1
+FROM cimg/base:current
 
-# Install git 2.22 from source
-RUN sudo apt-get update
-RUN sudo apt-get install gettext
-RUN cd /usr/src/ && \
-    sudo wget https://github.com/git/git/archive/v2.23.0.tar.gz -O git.tar.gz && \
-    sudo tar -xf git.tar.gz && \
-    cd /usr/src/git-* && \
-    sudo make prefix=/usr/local all && \
-    sudo make prefix=/usr/local install && \
-    sudo make clean && \
-    sudo rm -r /usr/src/git*
+RUN sudo mkdir /opt/circleci && sudo chown circleci /opt/circleci && sudo chgrp circleci /opt/circleci && \
+    sudo mkdir /code && sudo chown circleci /code && sudo chgrp circleci /code
 
-# Poetry
-RUN sudo curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+ENV PYENV_ROOT=/opt/circleci/.pyenv \
+    POETRY_HOME=/opt/circleci/.poetry \
+    POETRY_VIRTUALENVS_IN_PROJECT=true \
+    PATH=/code/.venv/bin:/opt/circleci/.pyenv/shims:/opt/circleci/.pyenv/bin:/opt/circleci/.poetry/bin:$PATH
 
-# Python 3.7.12
-RUN sudo curl -O https://www.python.org/ftp/python/3.7.12/Python-3.7.12.tgz && \
-    sudo tar -xvzf Python-3.7.12.tgz && \
-    cd Python-3.7.12 && \
-    sudo ./configure --prefix=/usr/ && \
-    sudo make && \
-    sudo make install && \
-    sudo make clean && \
-    cd .. && \
-    sudo rm -r Python-3.7.12
+RUN sudo apt-get update && sudo apt-get install -y \
+        build-essential \
+        ca-certificates \
+        curl \
+        git \
+        libbz2-dev \
+        liblzma-dev \
+        libncurses5-dev \
+        libncursesw5-dev \
+        libreadline-dev \
+        libffi-dev \
+        libsqlite3-dev \
+        libssl-dev \
+        libxml2-dev \
+        libxmlsec1-dev \
+        llvm \
+        make \
+        python-openssl \
+        tk-dev \
+        wget \
+        xz-utils \
+        zlib1g-dev && \
+    curl https://pyenv.run | bash && \
+    sudo rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Python 3.8.11
-RUN sudo curl -O https://www.python.org/ftp/python/3.8.11/Python-3.8.11.tgz && \
-    sudo tar -xvzf Python-3.8.11.tgz && \
-    cd Python-3.8.11 && \
-    sudo ./configure --prefix=/usr/ && \
-    sudo make && \
-    sudo make install && \
-    sudo make clean && \
-    cd .. && \
-    sudo rm -r Python-3.8.11
+RUN env PYTHON_CONFIGURE_OPTS="--enable-shared --enable-optimizations" \
+    pyenv install -v 3.7.13 && \
+    pyenv install -v 3.8.13 && \
+    pyenv install -v 3.9.13 && \
+    pyenv install -v 3.10.6 && \
+    pyenv global 3.10.6 3.9.13 3.8.13 3.7.13
 
-# Python 3.9.10
-RUN sudo curl -O https://www.python.org/ftp/python/3.9.10/Python-3.9.10.tgz && \
-    sudo tar -xvzf Python-3.9.10.tgz && \
-    cd Python-3.9.10 && \
-    sudo ./configure --prefix=/usr/ && \
-    sudo make && \
-    sudo make install && \
-    sudo make clean && \
-    cd .. && \
-    sudo rm -r Python-3.9.10
+RUN curl -sSL https://install.python-poetry.org | python -  
 
-RUN sudo apt-get install postgresql-client
+RUN sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt focal-pgdg main" > /etc/apt/sources.list.d/pgdg.list' && \
+    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add - && \
+    sudo apt -y update && \
+    sudo apt-get install -y postgresql-client-14 && \
+    sudo rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN sudo mkdir /code
-RUN sudo chmod 0777 /code
 WORKDIR /code
-ENV PATH=/code/.venv/bin:${PATH} \
-    POETRY_VIRTUALENVS_IN_PROJECT=true
