@@ -101,7 +101,8 @@ project with the default values.
 Once the project has been followed, go to
 https://readthedocs.org/dashboard/{project_name}/rules/regex/create/
 and under "version type" choose "tag" and choose "activate version"
-as the rule.
+as the rule. After this, create a new rule with the same settings,
+except choose "Set version as default".
 
 ReadTheDocs builds should happen automatically after the first version is
 published.
