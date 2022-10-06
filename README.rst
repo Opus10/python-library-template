@@ -77,7 +77,7 @@ scaffolding provided by the template, which includes:
 5. Automatic generation of CHANGELOG.md using
    `git-tidy <https://github.com/Opus10/git-tidy>`__.
 6. A makefile for setting up the development environment locally
-   (``make setup``), running tests (``make test``), and running linting
+   (``make docker-setup``), running tests (``make test``), and running linting
    (``make lint``).
 7. A CircleCI file for running tests, doing deployments, and verifying any
    project made with this template remains up to date.
@@ -171,8 +171,8 @@ Remember that one can also perform
 list of all projects spun up with this template for examples at Opus 10.
 
 Building docs also comes with this template. In order to build and look at docs
-locally, one has to first set up the project with ``make setup`` and then
-type ``make docs`` to build docs. Docs can be opened with ``make open_docs``.
+locally, one has to first set up the project with ``make docker-setup`` and then
+type ``make docs`` to build docs. Docs can be opened with ``make open-docs``.
 
 **Note** Docs are also built during ``make lint`` in order to catch any
 documentation building errors during continuous integration.
