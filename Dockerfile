@@ -1,4 +1,4 @@
-FROM cimg/base:current
+FROM cimg/base:2022.08
 
 RUN sudo mkdir /opt/circleci && sudo chown circleci /opt/circleci && sudo chgrp circleci /opt/circleci && \
     sudo mkdir /code && sudo chown circleci /code && sudo chgrp circleci /code
@@ -38,7 +38,7 @@ RUN env PYTHON_CONFIGURE_OPTS="--enable-shared --enable-optimizations" \
     pyenv install -v 3.8.13 && \
     pyenv install -v 3.9.13 && \
     pyenv install -v 3.10.6 && \
-    pyenv global 3.10.6 3.9.13 3.8.13 3.7.13
+    pyenv global system 3.10.6 3.9.13 3.8.13 3.7.13
 
 RUN curl -sSL https://install.python-poetry.org | python -  
 

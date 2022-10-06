@@ -370,7 +370,7 @@ def footing_setup():
 
     print(
         f'Setup complete! cd into "{REPO_NAME}", make a new branch,'
-        ' and type "make setup" to set up your development environment.'
+        ' and type "make docker-setup" to set up your development environment.'
     )
 
 
