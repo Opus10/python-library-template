@@ -1,0 +1,11 @@
+name: {{ cookiecutter.repo_name }}
+channels:
+  - conda-forge
+dependencies:
+  - python==3.10
+  - pip
+  - pip:
+    - poetry>=1.2
+variables:
+  DATABASE_URL: "postgres://postgres@localhost:5432/{{ cookiecutter.module_name }}_local"
+  EXEC_WRAPPER: ""
