@@ -241,7 +241,7 @@ def github_push_initial_repo(
     if isinstance(initial_commit, str):
         initial_commit = [initial_commit]
 
-    _shell("git init")
+    _shell("git init -b master")
     _shell("git add .")
     _shell("git commit " + " ".join(f'-m "{msg}"' for msg in initial_commit))
     _shell(f"git remote add origin {remote}")
