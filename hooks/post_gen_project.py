@@ -342,9 +342,10 @@ def footing_setup():
             "required_pull_request_reviews": None,
             "required_status_checks": {
                 "contexts": [
+                    "ci/circleci: test_pg_min",
+                    "ci/circleci: test_pg_max",
                     "ci/circleci: check_changelog",
                     "ci/circleci: lint",
-                    "ci/circleci: test",
                 ],
                 "strict": True,
             },
