@@ -4,9 +4,8 @@
 #
 # setup - Sets up the development environment
 # dependencies - Installs dependencies
-# clean-docs - Clean the documentation folder
-# open-docs - Open any docs generated with "make docs"
-# docs - Generated sphinx docs
+# serve-docs - Serve documentation
+# docs - Build documentation
 # lint - Run code linting and static checks
 # format - Format code using black
 # test - Run tests using pytest
@@ -52,8 +51,8 @@ ifndef run
 	      "    tox: Run tests against all versions of Python\n"\
 	      "    lint: Run code linting and static checks\n"\
 	      "    format: Format code using Black\n"\
-	      "    docs: Build Sphinx documentation\n"\
-	      "    open-docs: Open built documentation\n"\
+	      "    docs: Build documentation\n"\
+	      "    serve-docs: Serve documentation\n"\
 	      "    docker-teardown: Spin down docker resources\n"\
 	      "\n"\
 	      "View the Makefile for more documentation"
@@ -141,35 +140,23 @@ full-test-suite:
 	$(EXEC_WRAPPER) tox -p 2
 
 
-# Clean the documentation folder
-.PHONY: clean-docs
-clean-docs:
-	-$(EXEC_WRAPPER) bash -c 'cd docs && make clean'
+# Serve documentation
+.PHONY: serve-docs
+serve-docs:
+	$(EXEC_WRAPPER) mkdocs serve
 
 
-# Open the build docs (only works on Mac)
-.PHONY: open-docs
-open-docs:
-ifeq (${OS}, Darwin)
-	open docs/_build/html/index.html
-else ifeq (${OS}, Linux)
-	xdg-open docs/_build/html/index.html
-else
-	@echo "Open 'docs/_build/html/index.html' to view docs"
-endif
-
-
-# Build Sphinx autodocs
+# Build documentation
 .PHONY: docs
-docs: clean-docs  # Ensure docs are clean, otherwise weird render errors can result
-	$(EXEC_WRAPPER) bash -c 'cd docs && make html'
+docs:
+	$(EXEC_WRAPPER) mkdocs build
 
 
 # Run code linting and static analysis. Ensure docs can be built
 .PHONY: lint
 lint:
 	$(EXEC_WRAPPER) black . --check
-	$(EXEC_WRAPPER) flake8 -v ${MODULE_NAME}
+	$(EXEC_WRAPPER) ruff check ${MODULE_NAME} --fix
 	$(EXEC_WRAPPER) footing update --check
 	$(EXEC_WRAPPER) bash -c 'cd docs && make html'
 
