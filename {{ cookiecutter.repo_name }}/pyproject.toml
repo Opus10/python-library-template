@@ -50,7 +50,7 @@ classifiers = [
   "Framework :: Django",
 ]
 license = "BSD-3-Clause"
-readme = "README.rst"
+readme = "README.md"
 homepage = "https://github.com/Opus10/{{ cookiecutter.repo_name }}"
 repository = "https://github.com/Opus10/{{ cookiecutter.repo_name }}"
 documentation = "https://{{ cookiecutter.repo_name }}.readthedocs.io"
