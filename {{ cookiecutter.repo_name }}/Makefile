@@ -4,10 +4,10 @@
 #
 # setup - Sets up the development environment
 # dependencies - Installs dependencies
-# serve-docs - Serve documentation
 # docs - Build documentation
+# docs-serve - Serve documentation
 # lint - Run code linting and static checks
-# format - Format code using black
+# lint-fix - Fix common linting errors
 # test - Run tests using pytest
 # full-test-suite - Run full test suite using tox
 # shell - Run a shell in a virtualenv
@@ -50,9 +50,9 @@ ifndef run
 	      "    test: Run tests\n"\
 	      "    tox: Run tests against all versions of Python\n"\
 	      "    lint: Run code linting and static checks\n"\
-	      "    format: Format code using Black\n"\
+	      "    lint-fix: Fix common linting errors\n"\
 	      "    docs: Build documentation\n"\
-	      "    serve-docs: Serve documentation\n"\
+	      "    docs-serve: Serve documentation\n"\
 	      "    docker-teardown: Spin down docker resources\n"\
 	      "\n"\
 	      "View the Makefile for more documentation"
@@ -140,25 +140,32 @@ full-test-suite:
 	$(EXEC_WRAPPER) tox -p 2
 
 
-# Serve documentation
-.PHONY: serve-docs
-serve-docs:
-	$(EXEC_WRAPPER) mkdocs serve
-
-
 # Build documentation
 .PHONY: docs
 docs:
 	$(EXEC_WRAPPER) mkdocs build
 
 
+# Serve documentation
+.PHONY: serve-docs
+serve-docs:
+	$(EXEC_WRAPPER) mkdocs serve
+
+
 # Run code linting and static analysis. Ensure docs can be built
 .PHONY: lint
 lint:
 	$(EXEC_WRAPPER) black . --check
-	$(EXEC_WRAPPER) ruff check ${MODULE_NAME} --fix
+	$(EXEC_WRAPPER) ruff check ${MODULE_NAME}
 	$(EXEC_WRAPPER) footing update --check
 	$(EXEC_WRAPPER) bash -c 'cd docs && make html'
+
+
+# Fix common linting errors
+.PHONY: lint-fix
+lint-fix:
+	$(EXEC_WRAPPER) black .
+	$(EXEC_WRAPPER) ruff check ${MODULE_NAME} --fix
 
 
 # Lint commit messages
@@ -177,9 +184,3 @@ tidy-commit:
 .PHONY: tidy-squash
 tidy-squash:
 	$(EXEC_WRAPPER) git tidy-squash origin/master
-
-
-# Format code with black
-.PHONY: format
-format:
-	$(EXEC_WRAPPER) black .
