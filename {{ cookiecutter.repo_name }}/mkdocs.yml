@@ -16,7 +16,7 @@ plugins:
           options:
             docstring_options:
               ignore_init_summary: true
-            line_length: 99
+            line_length: 80
             # docstring_section_style: list
             heading_level: 2
             merge_init_into_class: true
@@ -67,3 +67,4 @@ nav:
   - Overview: index.md
   - Installation: installation.md
   - Release Notes: release_notes.md
+  - Contributing Guide: contributing.md

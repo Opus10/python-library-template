@@ -137,7 +137,7 @@ test:
 # Run full test suite
 .PHONY: full-test-suite
 full-test-suite:
-	$(EXEC_WRAPPER) tox -p 2
+	$(EXEC_WRAPPER) tox
 
 
 # Build documentation
