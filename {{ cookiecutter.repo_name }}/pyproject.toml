@@ -68,6 +68,7 @@ pytest-django = "4.5.2"
 django-dynamic-fixture = "4.0.1"
 tox = "4.11.3"
 ruff = "0.3.7"
+pyright = "1.1.358"
 mkdocs = "1.5.3"
 mkdocs-material = "9.4.4"
 mkdocstrings-python = "1.7.2"
@@ -86,3 +87,13 @@ DJANGO_SETTINGS_MODULE = "settings"
 lint.select = ["E", "F", "B", "I", "G", "C4"]
 line-length = 99
 target-version = "py38"
+
+[tool.pyright]
+exclude = [
+    "**/node_modules",
+    "**/__pycache__",
+    "src/experimental",
+    "src/typestubs",
+]
+pythonVersion = "3.8"
+typeCheckingMode = "standard"
