@@ -51,6 +51,7 @@ ifndef run
 	      "    tox: Run tests against all versions of Python\n"\
 	      "    lint: Run code linting and static checks\n"\
 	      "    lint-fix: Fix common linting errors\n"\
+	      "    type-check: Run Pyright type-checking\n"\
 	      "    docs: Build documentation\n"\
 	      "    docs-serve: Serve documentation\n"\
 	      "    docker-teardown: Spin down docker resources\n"\
@@ -167,6 +168,10 @@ lint-fix:
 	$(EXEC_WRAPPER) ruff format .
 	$(EXEC_WRAPPER) ruff check ${MODULE_NAME} --fix
 
+# Run Pyright type-checking
+.PHONY: type-check
+type-check:
+	$(EXEC_WRAPPER) pyright .
 
 # Lint commit messages
 .PHONY: tidy-lint
