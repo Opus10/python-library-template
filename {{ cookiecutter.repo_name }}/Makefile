@@ -155,7 +155,7 @@ docs-serve:
 # Run code linting and static analysis. Ensure docs can be built
 .PHONY: lint
 lint:
-	$(EXEC_WRAPPER) black . --check
+	$(EXEC_WRAPPER) ruff format . --check
 	$(EXEC_WRAPPER) ruff check ${MODULE_NAME}
 	$(EXEC_WRAPPER) footing update --check
 	$(EXEC_WRAPPER) bash -c 'make docs'
@@ -164,7 +164,7 @@ lint:
 # Fix common linting errors
 .PHONY: lint-fix
 lint-fix:
-	$(EXEC_WRAPPER) black .
+	$(EXEC_WRAPPER) ruff format .
 	$(EXEC_WRAPPER) ruff check ${MODULE_NAME} --fix
 
 
