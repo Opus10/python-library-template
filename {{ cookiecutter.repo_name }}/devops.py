@@ -10,6 +10,7 @@ https://github.com/Opus10/public-django-app-template
 Do not change this script! Any fixes or updates to this script should be made
 to https://github.com/Opus10/public-django-app-template
 """
+
 import os
 import subprocess
 import sys

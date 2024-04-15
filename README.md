@@ -1,10 +1,10 @@
 # Public Django App Template
 
-This repository provides a template for a pip-installable public Django app deployed using CircleCI to PyPI.
+This repository provides a template for a pip-installable public Python project deployed using CircleCI to PyPI.
 
 This is a [cookiecutter](https://cookiecutter.readthedocs.io/en/latest/) template that can be used by [footing](https://github.com/Opus10/footing/) to create and manage the project.
 
-A new public Django app can be started with:
+A new public project can be started with:
 
     pip3 install footing
     footing setup git@github.com:Opus10/public-django-app-template.git
@@ -24,6 +24,8 @@ When calling `footing setup`, the user will be prompted for template parameters.
 1. `repo_name`: The name of the repository **and** and name that will be used when installing via pip. Be sure that the name isn't taken on PyPI before creation.
 2. `module_name`: The name of the Python module that will be imported as a library. Modules must have underscores (i.e. `import my_installable_package`)
 3. `short_description`: A short description of the project. This will be added as the Github repo description and the description in the `pyproject.toml` file. It will also be the description displayed when users do `footing ls github.com/Opus10` to list this project.
+4. `check_types_in_ci`: True if type checking should be a required CI check.
+5. `is_django`: True if this is a Django app.
 
 ## What Does This Template Provide?
 
@@ -37,7 +39,7 @@ When using this template with [footing setup](git@github.com:Opus10/public-djang
 
 Once all of this is complete, the user can take advantage of all of the scaffolding provided by the template, which includes:
 
-1. Automatic deployment to PyPI when merging into the master (see `.circleci/config.yaml`).
+1. Automatic deployment to PyPI when merging into the main (see `.circleci/config.yaml`).
 2. Ruff integration (see `pyproject.toml` for configuration).
 3. Coverage integration (see `pyproject.toml` for coverage configuration).
 4. Automatic version tagging and version bumping (more on this in later sections).
