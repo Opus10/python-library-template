@@ -5,7 +5,11 @@ dependencies:
   - python==3.12.0
   - poetry==1.6.1
   - pip==23.2.1
+  {%- if cookiecutter.is_django == "True" %}
   - postgresql==16.0
+  {%- endif %}
 variables:
+  {%- if cookiecutter.is_django == "True" %}
   DATABASE_URL: "postgres://postgres@localhost:5432/{{ cookiecutter.module_name }}_local"
+  {%- endif %}
   EXEC_WRAPPER: ""

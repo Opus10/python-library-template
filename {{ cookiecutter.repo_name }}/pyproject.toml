@@ -30,12 +30,14 @@ version = "0.0.0"
 description = "{{ cookiecutter.short_description }}"
 authors = ["Opus 10 Engineering"]
 classifiers = [
+  {%- if cookiecutter.is_django == "True" %}
   "Framework :: Django",
   "Framework :: Django :: 3.2",
   "Framework :: Django :: 4.0",
   "Framework :: Django :: 4.1",
   "Framework :: Django :: 4.2",
   "Framework :: Django :: 5.0",
+  {% endif %}
   "Intended Audience :: Developers",
   "Operating System :: OS Independent",
   "Programming Language :: Python",
@@ -45,7 +47,9 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3 :: Only",
+  {%- if cookiecutter.is_django == "True" %}
   "Framework :: Django",
+  {% endif %}
 ]
 license = "BSD-3-Clause"
 readme = "README.md"
@@ -55,33 +59,40 @@ documentation = "https://{{ cookiecutter.repo_name }}.readthedocs.io"
 
 [tool.poetry.dependencies]
 python = ">=3.8.0,<4"
+{%- if cookiecutter.is_django == "True" %}
 django = ">=3"
+{%- endif %}
 
 [tool.poetry.dev-dependencies]
-dj-database-url = "2.1.0"
 git-tidy = "1.2.0"
-psycopg2-binary = "2.9.9"
 pytest = "7.4.2"
 pytest-cov = "4.1.0"
 pytest-dotenv = "0.5.2"
-pytest-django = "4.5.2"
-django-dynamic-fixture = "4.0.1"
 tox = "4.11.3"
 ruff = "0.3.7"
 pyright = "1.1.358"
 mkdocs = "1.5.3"
-mkdocs-material = "9.4.4"
-mkdocstrings-python = "1.7.2"
+black = "24.4.0"
+mkdocs-material = "9.5.18"
+mkdocstrings-python = "1.9.2"
 footing = "*"
 setuptools = "*"
 poetry-core = "*"
+{%- if cookiecutter.is_django == "True" %}
+dj-database-url = "2.1.0"
+psycopg2-binary = "2.9.9"
+pytest-django = "4.5.2"
+django-dynamic-fixture = "4.0.1"
+{% endif %}
 
 [tool.pytest.ini_options]
 xfail_strict = true
-addopts = "--reuse-db"
 testpaths = "{{ cookiecutter.module_name }}/tests"
 norecursedirs = ".venv"
+{%- if cookiecutter.is_django == "True" %}
+addopts = "--reuse-db"
 DJANGO_SETTINGS_MODULE = "settings"
+{%- endif %}
 
 [tool.ruff]
 lint.select = ["E", "F", "B", "I", "G", "C4"]
@@ -94,6 +105,8 @@ exclude = [
     "**/__pycache__",
     "src/experimental",
     "src/typestubs",
+    "**/migrations/**",
+    "**/tests/**",
 ]
 pythonVersion = "3.8"
 typeCheckingMode = "standard"

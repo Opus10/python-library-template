@@ -8,6 +8,7 @@
 # docs-serve - Serve documentation
 # lint - Run code linting and static checks
 # lint-fix - Fix common linting errors
+# type-check - Run Pyright type-checking
 # test - Run tests using pytest
 # full-test-suite - Run full test suite using tox
 # shell - Run a shell in a virtualenv
@@ -34,8 +35,11 @@ else ifeq (${OS}, Darwin)
 endif
 
 # Docker run mounts the local code directory, SSH (for git), and global git config information
+{%- if cookiecutter.is_django == "True" %}
 DOCKER_RUN_CMD?=$(DOCKER_CMD)-compose run --name $(PACKAGE_NAME) $(DOCKER_RUN_ARGS) -d app
-
+{%- else %}
+DOCKER_RUN_CMD?=$(DOCKER_CMD) run -t --name $(PACKAGE_NAME) $(DOCKER_RUN_ARGS) -d opus10/circleci-python-library
+{%- endif %}
 
 # Print usage of main targets when user types "make" or "make help"
 .PHONY: help
@@ -66,7 +70,11 @@ endif
 # Pull the latest container and start a detached run
 .PHONY: docker-start
 docker-start:
+    {%- if cookiecutter.is_django %}
 	$(DOCKER_CMD)-compose pull
+    {%- else %}
+	$(DOCKER_CMD) pull opus10/circleci-public-python-library
+    {%- endif %}
 	$(DOCKER_RUN_CMD)
 
 
@@ -89,6 +97,7 @@ git-setup:
 	$(EXEC_WRAPPER) git config --local commit.template .gitcommit.tpl
 
 
+{% if cookiecutter.is_django == "True" -%}
 # Sets up the local database
 .PHONY: db-setup
 db-setup:
@@ -97,6 +106,7 @@ db-setup:
 	-psql postgres -c "CREATE DATABASE ${MODULE_NAME}_local OWNER postgres;"
 	-psql postgres -c "GRANT ALL PRIVILEGES ON DATABASE ${MODULE_NAME}_local to postgres;"
 	$(EXEC_WRAPPER) python manage.py migrate
+{%- endif %}
 
 
 # Sets up a conda development environment
@@ -109,7 +119,7 @@ conda-create:
 # Sets up a Conda development environment
 .PHONY: conda-setup
 conda-setup: EXEC_WRAPPER=conda run -n ${PACKAGE_NAME} --no-capture-output
-conda-setup: conda-create lock dependencies git-setup db-setup
+conda-setup: conda-create lock dependencies git-setup {% if cookiecutter.is_django == "True" %}db-setup{% endif %}
 
 
 # Sets up a Docker development environment
@@ -120,7 +130,12 @@ docker-setup: docker-teardown docker-start lock dependencies git-setup
 # Spin down docker resources
 .PHONY: docker-teardown
 docker-teardown:
+    {%- if cookiecutter.is_django == "True" %}
 	$(DOCKER_CMD)-compose down --remove-orphans
+    {%- else %}
+	-$(DOCKER_CMD) stop $(PACKAGE_NAME)
+	-$(DOCKER_CMD) rm $(PACKAGE_NAME)
+    {%- endif %}
 
 
 # Run a shell
@@ -168,15 +183,17 @@ lint-fix:
 	$(EXEC_WRAPPER) ruff format .
 	$(EXEC_WRAPPER) ruff check ${MODULE_NAME} --fix
 
+
 # Run Pyright type-checking
 .PHONY: type-check
 type-check:
-	$(EXEC_WRAPPER) pyright .
+	$(EXEC_WRAPPER) pyright $(MODULE_NAME)
+
 
 # Lint commit messages
 .PHONY: tidy-lint
 tidy-lint:
-	$(EXEC_WRAPPER) git tidy-lint origin/master..
+	$(EXEC_WRAPPER) git tidy-lint origin/main..
 
 
 # Perform a tidy commit
@@ -188,4 +205,4 @@ tidy-commit:
 # Perform a tidy squash
 .PHONY: tidy-squash
 tidy-squash:
-	$(EXEC_WRAPPER) git tidy-squash origin/master
+	$(EXEC_WRAPPER) git tidy-squash origin/main

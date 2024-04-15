@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Prompts the user and runs project setup during ``footing setup``"""
 import os
+import pathlib
 import re
 import subprocess
 import sys
@@ -11,6 +12,8 @@ import requests
 REPO_NAME = "{{ cookiecutter.repo_name }}"
 MODULE_NAME = "{{ cookiecutter.module_name }}"
 DESCRIPTION = "{{ cookiecutter.short_description }}"
+IS_DJANGO = "{{ cookiecutter.is_django }}" == "True"
+CHECK_TYPES_IN_CI = "{{ cookiecutter.check_types_in_ci }}" == "True"
 FOOTING_ENV_VAR = "_FOOTING"
 GITHUB_API_TOKEN_ENV_VAR = "GITHUB_API_TOKEN"
 GITHUB_ORG_NAME = "Opus10"
@@ -241,12 +244,12 @@ def github_push_initial_repo(
     if isinstance(initial_commit, str):
         initial_commit = [initial_commit]
 
-    _shell("git init -b master")
+    _shell("git init -b main")
     _shell("git add .")
     _shell("git commit " + " ".join(f'-m "{msg}"' for msg in initial_commit))
     _shell(f"git remote add origin {remote}")
 
-    ret = _shell("git push origin master", check=False)
+    ret = _shell("git push origin main", check=False)
     if ret.returncode != 0:
         msg = "There was an error when pushing the initial repository."
         prompt_msg = (
@@ -306,6 +309,15 @@ def circleci_configure_project_settings(repo_name):
 
 
 def footing_setup():
+    # Conditionally remove files
+    if not IS_DJANGO:
+        pathlib.Path("docker-compose.yml").unlink()
+        pathlib.Path("manage.py").unlink()
+        pathlib.Path("settings.py").unlink()
+
+    if not CHECK_TYPES_IN_CI:
+        (pathlib.Path(MODULE_NAME) / "py.typed").unlink()
+
     # Make sure requests is installed
     print("Installing requests library for repository setup...")
     _shell("pip3 install requests")
@@ -331,13 +343,23 @@ def footing_setup():
     )
     github_create_repo(REPO_NAME, DESCRIPTION)
 
-    print("Creating initial repository and pushing to master.")
+    print("Creating initial repository and pushing to main.")
     github_push_initial_repo(REPO_NAME)
 
     print("Setting up default branch protection.")
+    contexts = [
+        "ci/circleci: check_changelog",
+        "ci/circleci: lint",
+        "ci/circleci: type_check",
+    ]
+    if IS_DJANGO:
+        contexts.extend(["ci/circleci: test_pg_min", "ci/circleci: test_pg_max"])
+    else:
+        contexts.append("ci/circleci: test")
+
     github_setup_branch_protection(
         REPO_NAME,
-        "master",
+        "main",
         {
             "required_pull_request_reviews": None,
             "required_status_checks": {
@@ -346,6 +368,7 @@ def footing_setup():
                     "ci/circleci: test_pg_max",
                     "ci/circleci: check_changelog",
                     "ci/circleci: lint",
+                    "ci/circleci: type_check",
                 ],
                 "strict": True,
             },

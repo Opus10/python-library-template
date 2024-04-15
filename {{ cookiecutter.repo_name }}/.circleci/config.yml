@@ -1,84 +1,102 @@
-{% raw -%}
 version: 2.1
 
 orbs:
   opus10:
     executors:
-      python-pg:
-        parameters:
-          pg_version:
-            type: "string"
-            default: "14.4"
+      python:
         working_directory: /code
         docker:
-          - image: opus10/circleci-public-django-app:2023-10-06
+          - image: opus10/circleci-python-library:2024-04-17
             environment:
               # Ensure makefile commands are not wrapped in "docker-compose run"
               EXEC_WRAPPER: ''
-              DATABASE_URL: postgres://root@localhost/circle_test?sslmode=disable
               TOX_PARALLEL_NO_SPINNER: 1
+        {%- if cookiecutter.is_django == "True" %}
+              DATABASE_URL: postgres://root@localhost/circle_test?sslmode=disable
           - image: cimg/postgres:<<parameters.pg_version>>
             environment:
               POSTGRES_USER: root
               POSTGRES_DB: circle_test
               POSTGRES_PASSWORD: password
+        parameters:
+          pg_version:
+            type: "string"
+            default: "14.4"
+        {%- endif %}
     commands:
       test:
         steps:
           - checkout
           - restore_cache:
-              key: v4-{{ checksum "poetry.lock" }}
+              key: v4-{{ '{{' }} checksum "poetry.lock" {{ '}}' }} 
           - run: make dependencies
           - run: make full-test-suite
           - save_cache:
-              key: v4-{{ checksum "poetry.lock" }}
+              key: v4-{{ '{{' }} checksum "poetry.lock" {{ '}}' }} 
               paths:
                 - /home/circleci/.cache/pypoetry/
                 - /code/.venv
                 - /code/.tox
 
 jobs:
+  {%- if cookiecutter.is_django == "True" %}
   test_pg_min:
     executor:
-      name: opus10/python-pg
+      name: opus10/python
       pg_version: "12.15"
     steps:
       - opus10/test
 
   test_pg_max:
     executor:
-      name: opus10/python-pg
+      name: opus10/python
       pg_version: "16.0"
     steps:
       - opus10/test
+  {%- else %}
+  test:
+    executor:
+      name: opus10/python
+    steps:
+      - opus10/test
+  {%- endif %}
 
   lint:
-    executor: opus10/python-pg
+    executor: opus10/python
     steps:
       - checkout
       - restore_cache:
-          key: v4-{{ checksum "poetry.lock" }}
+          key: v4-{{ '{{' }} checksum "poetry.lock" {{ '}}' }} 
       - run: make dependencies
       - run: make lint
 
-  check_changelog:
-    executor: opus10/python-pg
+  type_check:
+    executor: opus10/python
     steps:
       - checkout
       - restore_cache:
-          key: v4-{{ checksum "poetry.lock" }}
+          key: v4-{{ '{{' }} checksum "poetry.lock" {{ '}}' }}
       - run: make dependencies
-      - run: git tidy-log origin/master..
+      - run: make type-check {% if not cookiecutter.check_types_in_ci == 'True' %}|| true{% endif %}
+
+  check_changelog:
+    executor: opus10/python
+    steps:
+      - checkout
+      - restore_cache:
+          key: v4-{{ '{{' }} checksum "poetry.lock" {{ '}}' }} 
+      - run: make dependencies
+      - run: git tidy-log origin/main..
       - run: make tidy-lint
 
   deploy:
-    executor: opus10/python-pg
+    executor: opus10/python
     steps:
       - checkout
       - run: ssh-add -D
       - run: echo "${GITHUB_DEVOPS_PRIVATE_SSH_KEY_BASE64}" | base64 --decode | ssh-add - > /dev/null
       - restore_cache:
-          key: v4-{{ checksum "poetry.lock" }}
+          key: v4-{{ '{{' }} checksum "poetry.lock" {{ '}}' }} 
       - run: make dependencies
       - run: poetry run python devops.py deploy
 
@@ -86,20 +104,28 @@ workflows:
   version: 2
   on_commit:
     jobs:
+      {%- if cookiecutter.is_django == "True" %}
       - test_pg_min
       - test_pg_max
+      {%- else %}
+      - test
+      {%- endif %}
       - lint
+      - type_check
       - check_changelog:
           filters:
             branches:
-              ignore: master
+              ignore: main
       - deploy:
-          context: public-django-app
+          context: python-library
           requires:
+            {%- if cookiecutter.is_django == "True" %}
             - test_pg_min
             - test_pg_max
+            {%- else %}
+            - test
+            {%- endif %}
             - lint
           filters:
             branches:
-              only: master
-{% endraw -%}
+              only: main
