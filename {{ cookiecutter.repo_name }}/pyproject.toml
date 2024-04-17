@@ -78,6 +78,7 @@ mkdocstrings-python = "1.9.2"
 footing = "*"
 setuptools = "*"
 poetry-core = "*"
+typing-extensions = "*"
 {%- if cookiecutter.is_django == "True" %}
 dj-database-url = "2.1.0"
 psycopg2-binary = "2.9.9"
