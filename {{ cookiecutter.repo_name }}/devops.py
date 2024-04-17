@@ -15,10 +15,9 @@ import os
 import subprocess
 import sys
 import tempfile
-from typing import IO, Any, Final, Literal, Tuple, Union
+from typing import IO, Any, Final, Literal, Tuple, TypeAlias, Union
 
 from packaging import version
-from typing_extensions import TypeAlias
 
 CIRCLECI_ENV_VAR: Final = "CIRCLECI"
 
