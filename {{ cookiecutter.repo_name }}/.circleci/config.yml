@@ -126,6 +126,7 @@ workflows:
             - test
             {%- endif %}
             - lint
+            - type_check
           filters:
             branches:
               only: main
