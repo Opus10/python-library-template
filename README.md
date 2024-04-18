@@ -1,4 +1,4 @@
-# Public Django App Template
+# Python Library Template
 
 This repository provides a template for a pip-installable public Python project deployed using CircleCI to PyPI.
 
@@ -7,7 +7,7 @@ This is a [cookiecutter](https://cookiecutter.readthedocs.io/en/latest/) templat
 A new public project can be started with:
 
     pip3 install footing
-    footing setup git@github.com:Opus10/public-django-app-template.git
+    footing setup git@github.com:Opus10/python-library-template.git
 
 **Note** when calling `footing setup`, a project will be created locally and it will also be set up on Github and CircleCI for continuous deployment. Do **not** create anything on Github or CircleCI before using this template.
 
@@ -29,7 +29,7 @@ When calling `footing setup`, the user will be prompted for template parameters.
 
 ## What Does This Template Provide?
 
-When using this template with [footing setup](git@github.com:Opus10/public-django-app-template.git), the `hooks/pre_gen_project.py` and `hooks/post_gen_project.py` files will be called to bootstrap your Python project. The following steps are taken:
+When using this template with [footing setup](git@github.com:Opus10/python-library-template.git), the `hooks/pre_gen_project.py` and `hooks/post_gen_project.py` files will be called to bootstrap your Python project. The following steps are taken:
 
 1. Create a local repository.
 2. Create a remote Github repository for the project.
