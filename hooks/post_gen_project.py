@@ -385,7 +385,7 @@ def footing_setup():
 
     get_user_input(
         "Final step! Go to"
-        " https://github.com/Opus10/public-django-app-template"
+        " https://github.com/Opus10/python-library-template"
         "#readthedocs-setup"
         " and read the instructions for ReadTheDocs integration. If you bypass"
         ' this step, your docs will not build properly. Hit "return" after'
