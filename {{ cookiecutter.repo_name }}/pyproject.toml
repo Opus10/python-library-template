@@ -14,6 +14,7 @@ exclude_lines = [
     "pass",
     "pytest.mark.skip",
     "@(typing\\.)?overload",
+    "if TYPE_CHECKING:",
 ]
 show_missing = true
 fail_under = 100
