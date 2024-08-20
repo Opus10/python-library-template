@@ -2,7 +2,7 @@
 
 ## Compatibility
 
-`{{ cookiecutter.repo_name }}` is compatible with Python 3.8 - 3.12{% if cookiecutter.is_django == "True" %}, Django 3.2 - 5.0, Psycopg 2 - 3, and Postgres 12 - 16{% endif %}.
+`{{ cookiecutter.repo_name }}` is compatible with Python 3.8 - 3.12{% if cookiecutter.is_django == "True" %}, Django 3.2 - 5.1, Psycopg 2 - 3, and Postgres 12 - 16{% endif %}.
 
 ## Documentation
 
