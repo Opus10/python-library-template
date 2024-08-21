@@ -8,7 +8,7 @@ orbs:
         docker:
           - image: opus10/circleci-python-library:2024-04-17
             environment:
-              # Ensure makefile commands are not wrapped in "docker-compose run"
+              # Ensure makefile commands are not wrapped in "docker compose run"
               EXEC_WRAPPER: ''
               TOX_PARALLEL_NO_SPINNER: 1
         {%- if cookiecutter.is_django == "True" %}
