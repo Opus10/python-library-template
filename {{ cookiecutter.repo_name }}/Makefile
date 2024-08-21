@@ -36,7 +36,7 @@ endif
 
 # Docker run mounts the local code directory, SSH (for git), and global git config information
 {%- if cookiecutter.is_django == "True" %}
-DOCKER_RUN_CMD?=$(DOCKER_CMD)-compose run --name $(PACKAGE_NAME) $(DOCKER_RUN_ARGS) -d app
+DOCKER_RUN_CMD?=$(DOCKER_CMD) compose run --name $(PACKAGE_NAME) $(DOCKER_RUN_ARGS) -d app
 {%- else %}
 DOCKER_RUN_CMD?=$(DOCKER_CMD) run -t --name $(PACKAGE_NAME) $(DOCKER_RUN_ARGS) -d opus10/circleci-python-library
 {%- endif %}
@@ -71,7 +71,7 @@ endif
 .PHONY: docker-start
 docker-start:
     {%- if cookiecutter.is_django %}
-	$(DOCKER_CMD)-compose pull
+	$(DOCKER_CMD) compose pull
     {%- else %}
 	$(DOCKER_CMD) pull opus10/circleci-public-python-library
     {%- endif %}
@@ -131,7 +131,7 @@ docker-setup: docker-teardown docker-start lock dependencies git-setup
 .PHONY: docker-teardown
 docker-teardown:
     {%- if cookiecutter.is_django == "True" %}
-	$(DOCKER_CMD)-compose down --remove-orphans
+	$(DOCKER_CMD) compose down --remove-orphans
     {%- else %}
 	-$(DOCKER_CMD) stop $(PACKAGE_NAME)
 	-$(DOCKER_CMD) rm $(PACKAGE_NAME)
