@@ -166,7 +166,7 @@ docs-serve:
 # Make the docs requirements file
 .PHONY: docs-requirements
 docs-requirements:
-	$(EXEC_WRAPPER) poetry export --dev --without-hashes -f requirements.txt > docs/requirements.txt
+	$(EXEC_WRAPPER) poetry export --with dev --without-hashes -f requirements.txt > docs/requirements.txt
 
 
 # Run code linting and static analysis. Ensure docs can be built
@@ -175,6 +175,7 @@ lint:
 	$(EXEC_WRAPPER) ruff format . --check
 	$(EXEC_WRAPPER) ruff check ${MODULE_NAME}
 	$(EXEC_WRAPPER) bash -c 'make docs'
+	$(EXEC_WRAPPER) diff <(poetry export --with dev --without-hashes -f requirements.txt) docs/requirements.txt >/dev/null 2>&1 || exit 1
 
 
 # Fix common linting errors
