@@ -94,13 +94,28 @@ workflows:
   on_commit:
     jobs:
       {%- if cookiecutter.is_django == "True" %}
-      - test_pg_min
-      - test_pg_max
+      - test_pg_min:
+          filters:
+            tags:
+              only: /.*/
+      - test_pg_max:
+          filters:
+            tags:
+              only: /.*/
       {%- else %}
-      - test
+      - test:
+          filters:
+            tags:
+              only: /.*/
       {%- endif %}
-      - lint
-      - type_check
+      - lint:
+          filters:
+            tags:
+              only: /.*/
+      - type_check:
+          filters:
+            tags:
+              only: /.*/
       - deploy:
           context: python-library
           requires:
