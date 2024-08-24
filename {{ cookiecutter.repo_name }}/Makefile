@@ -59,6 +59,7 @@ ifndef run
 	      "    type-check: Run Pyright type-checking\n"\
 	      "    docs: Build documentation\n"\
 	      "    docs-serve: Serve documentation\n"\
+	      "    docs-requirements: Build the docs requirements file\n"\
 	      "    docker-teardown: Spin down docker resources\n"\
 	      "\n"\
 	      "View the Makefile for more documentation"
@@ -165,7 +166,7 @@ docs-serve:
 # Make the docs requirements file
 .PHONY: docs-requirements
 docs-requirements:
-        $(EXEC_WRAPPER) poetry export --dev --without-hashes -f requirements.txt > docs/requirements.txt
+	$(EXEC_WRAPPER) poetry export --dev --without-hashes -f requirements.txt > docs/requirements.txt
 
 
 # Run code linting and static analysis. Ensure docs can be built
