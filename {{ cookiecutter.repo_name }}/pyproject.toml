@@ -31,12 +31,6 @@ version = "0.0.0"
 description = "{{ cookiecutter.short_description }}"
 authors = ["Opus 10 Engineering"]
 classifiers = [
-  {%- if cookiecutter.is_django == "True" %}
-  "Framework :: Django",
-  "Framework :: Django :: 4.2",
-  "Framework :: Django :: 5.0",
-  "Framework :: Django :: 5.1",
-  {% endif %}
   "Intended Audience :: Developers",
   "Operating System :: OS Independent",
   "Programming Language :: Python",
@@ -48,7 +42,10 @@ classifiers = [
   "Programming Language :: Python :: 3 :: Only",
   {%- if cookiecutter.is_django == "True" %}
   "Framework :: Django",
-  {% endif %}
+  "Framework :: Django :: 4.2",
+  "Framework :: Django :: 5.0",
+  "Framework :: Django :: 5.1",
+  {%- endif %}
 ]
 license = "BSD-3-Clause"
 readme = "README.md"
