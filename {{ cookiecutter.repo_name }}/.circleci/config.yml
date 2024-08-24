@@ -79,16 +79,6 @@ jobs:
       - run: make dependencies
       - run: make type-check {% if not cookiecutter.check_types_in_ci == 'True' %}|| true{% endif %}
 
-  check_changelog:
-    executor: opus10/python
-    steps:
-      - checkout
-      - restore_cache:
-          key: v4-{{ '{{' }} checksum "poetry.lock" {{ '}}' }} 
-      - run: make dependencies
-      - run: git tidy-log origin/main..
-      - run: make tidy-lint
-
   deploy:
     executor: opus10/python
     steps:
@@ -129,4 +119,6 @@ workflows:
             - type_check
           filters:
             branches:
-              only: main
+              ignore: /.*/
+            tags:
+              only: /^v.*/

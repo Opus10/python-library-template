@@ -42,13 +42,10 @@ Once all of this is complete, the user can take advantage of all of the scaffold
 1. Automatic deployment to PyPI when merging into the main (see `.circleci/config.yaml`).
 2. Ruff integration (see `pyproject.toml` for configuration).
 3. Coverage integration (see `pyproject.toml` for coverage configuration).
-4. Automatic version tagging and version bumping (more on this in later sections).
-5. Automatic generation of CHANGELOG.md using [git-tidy](https://github.com/Opus10/git-tidy).
-6. A makefile for setting up the development environment locally (`make docker-setup`), running tests (`make test`), and running linting (`make lint`).
-7. A CircleCI file for running tests, doing deployments, and verifying any project made with this template remains up to date.
-8. A `.gitignore` file with defaults for Python, Atom, Vim, Emacs, Git, Pycharm, Mac files, and other popular apps.
-9. Scaffolding for [Mkdocs Material](https://squidfunk.github.io/mkdocs-material/) documentation.
-10. Commit linting during pull request review that verifies commits adhere to the proper schema. The linter also comments on Github pull requests so that reviewers can see what the release notes will look like for a particular pull request.
+4. A makefile for setting up the development environment locally (`make docker-setup`), running tests (`make test`), and running linting (`make lint`).
+5. A CircleCI file for running tests, doing deployments, and verifying any project made with this template remains up to date.
+6. A `.gitignore` file with defaults for Python, Atom, Vim, Emacs, Git, Pycharm, Mac files, and other popular apps.
+7. Scaffolding for [Mkdocs Material](https://squidfunk.github.io/mkdocs-material/) documentation.
 
 ## ReadTheDocs Setup
 
@@ -60,13 +57,7 @@ ReadTheDocs builds should happen automatically after the first version is publis
 
 ## An Important Note to Users
 
-By using this template for your Python project, you are agreeing that you will keep your project up to date with this template whenever it changes. You will know that your project is out of date when CircleCI runs the `footing update --check` command in the `.circleci/config.yaml` file of the project. When this happens, you can run `footing update` locally in your project repo to pull in the latest template updates.
-
-**Note** If you must do a release because of emergency circumstances, comment out `footing update --check` in the `.cirlceci/config.yaml` file to temporarily bypass the template check.
-
 It is important to keep any changes to the templated files of this project to a minimum, otherwise `footing update` will produce diffs that can be difficult to merge. Along with that, minimally editing the templated files ensures that your Python library project behaves similarly to all of the other ones at Opus 10. If there is an error in the templated files or a change that needs to be propagated to every package (e.g. updating Python), then the change should be made in this template repository.
-
-Please be aware that editing **any** part of this template repository (even this README file) will cause CircleCI builds to fail for all packages built with this template. Any changes to the template should not be taken lightly, and ideally multiple changes are merged in at once.
 
 ## Technical Decisions and How To
 
@@ -95,21 +86,7 @@ This template includes tests as part of the released library, meaning the applic
 
 ### Versioning and Deployment
 
-Typically when deploying python packages, one will manually edit the version in a `setup.py` (or in our case, `pyproject.toml`) file and then go through a series of steps to tag the version and push it to a package server. This template takes care of all of those steps automatically.
-
-Version management is performed during deployment by the `devops.py` script that is created with the project. It behaves in the following manner:
-
-1. Determines the current version of the project by the version set in `pyproject.toml`.
-2. Parses the commits since the version tag and checks for any `Type:` trailers in the commit message. Note that git trailers at the footer of the commit messages.
-3. If any `Type: api-break` trailers are found, the major version will be updated. If any `Type: feature` or `Type: bug` trailers are found, the minor version will be updated. Everything else will result in a patch version update.
-4. Poetry is used to update the version in `pyproject.toml` based on the semantic version update.
-5. The repository is tagged with the new version.
-6. A `CHANGELOG.md` file is created by [git-tidy](https://github.com/Opus10/git-tidy).
-7. The repository is committed, deployed to PyPI, and then pushed to github.
-
-### Pausing Deployment
-
-In order to pause deployment, either pause the CircleCI project or cancel the build after the deploy branch is merged.
+Versions are manually specified in pyproject.toml. Tagging will invoke a CI job to automatically release it on PyPI.
 
 ### Testing and Validation
 
@@ -118,11 +95,3 @@ Python libraries are set up to use [pytest](http://pytest-django.readthedocs.io/
 By default, the template configures that every branch of code is covered by tests in the `pyproject.toml` file. It is recommended to not turn off this setting and instead opt for placing `# pragma: no cover` comments on functions or lines of code that do not have any value in being covered by tests. By keeping this setting on, it helps ensure that any new additions to the library have been tested or have at least been documented to say that it isn't valuable to test.
 
 For validation, [ruff](https://docs.astral.sh/ruff/) is used to do static analysis of code. These checks are executed in the `.circleci/config.yaml` file and can be executed locally with `make lint`.
-
-## FAQ
-
-### Why Use This Template?
-
-Using this template ensures that your Python package behaves like all of the other Django apps at Opus 10, all the way from local development to documentation to production deployment. Having all of our Django apps set up, documented, and deployed in similar ways decreases the cognitive load for others using, fixing, and maintaining your tool.
-
-Using this template also ensures your package is kept up to date with changes at Opus 10, such as when we upgrade Python to newer versions or potentially switch to a different packaging index.
