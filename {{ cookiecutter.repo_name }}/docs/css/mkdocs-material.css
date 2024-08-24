@@ -18,3 +18,7 @@
 .md-footer-meta {
     background-color: #973E6B;
 }
+
+readthedocs-flyout {
+    display: none;
+}
