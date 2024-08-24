@@ -121,8 +121,8 @@ class GithubClient:
 def github_create_repo(
     repo_name,
     short_description,
-    disable_squash_merge=True,
-    disable_merge_commit=False,
+    disable_squash_merge=False,
+    disable_merge_commit=True,
     disable_rebase_merge=True,
     has_wiki=False,
     prompt=True,
@@ -348,7 +348,6 @@ def footing_setup():
 
     print("Setting up default branch protection.")
     contexts = [
-        "ci/circleci: check_changelog",
         "ci/circleci: lint",
         "ci/circleci: type_check",
     ]
@@ -363,13 +362,7 @@ def footing_setup():
         {
             "required_pull_request_reviews": None,
             "required_status_checks": {
-                "contexts": [
-                    "ci/circleci: test_pg_min",
-                    "ci/circleci: test_pg_max",
-                    "ci/circleci: check_changelog",
-                    "ci/circleci: lint",
-                    "ci/circleci: type_check",
-                ],
+                "contexts": contexts,
                 "strict": True,
             },
             "enforce_admins": False,
