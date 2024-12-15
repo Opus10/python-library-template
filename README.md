@@ -2,12 +2,12 @@
 
 This repository provides a template for a pip-installable public Python project deployed using CircleCI to PyPI.
 
-This is a [cookiecutter](https://cookiecutter.readthedocs.io/en/latest/) template that can be used by [footing](https://github.com/Opus10/footing/) to create and manage the project.
+This is a [cookiecutter](https://cookiecutter.readthedocs.io/en/latest/) template that can be used by [footing](https://github.com/AmbitionEng/footing/) to create and manage the project.
 
 A new public project can be started with:
 
     pip3 install footing
-    footing setup git@github.com:Opus10/python-library-template.git
+    footing setup git@github.com:AmbitionEng/python-library-template.git
 
 **Note** when calling `footing setup`, a project will be created locally and it will also be set up on Github and CircleCI for continuous deployment. Do **not** create anything on Github or CircleCI before using this template.
 
@@ -23,13 +23,13 @@ When calling `footing setup`, the user will be prompted for template parameters.
 
 1. `repo_name`: The name of the repository **and** and name that will be used when installing via pip. Be sure that the name isn't taken on PyPI before creation.
 2. `module_name`: The name of the Python module that will be imported as a library. Modules must have underscores (i.e. `import my_installable_package`)
-3. `short_description`: A short description of the project. This will be added as the Github repo description and the description in the `pyproject.toml` file. It will also be the description displayed when users do `footing ls github.com/Opus10` to list this project.
+3. `short_description`: A short description of the project. This will be added as the Github repo description and the description in the `pyproject.toml` file. It will also be the description displayed when users do `footing ls github.com/AmbitionEng` to list this project.
 4. `check_types_in_ci`: True if type checking should be a required CI check.
 5. `is_django`: True if this is a Django app.
 
 ## What Does This Template Provide?
 
-When using this template with [footing setup](git@github.com:Opus10/python-library-template.git), the `hooks/pre_gen_project.py` and `hooks/post_gen_project.py` files will be called to bootstrap your Python project. The following steps are taken:
+When using this template with [footing setup](git@github.com:AmbitionEng/python-library-template.git), the `hooks/pre_gen_project.py` and `hooks/post_gen_project.py` files will be called to bootstrap your Python project. The following steps are taken:
 
 1. Create a local repository.
 2. Create a remote Github repository for the project.
@@ -49,7 +49,7 @@ Once all of this is complete, the user can take advantage of all of the scaffold
 
 ## ReadTheDocs Setup
 
-This template does not automatically set up readthedocs.org integration. In order to do that, go to https://readthedocs.org/dashboard/import/, click "Opus 10", and refresh the repositories. Import the project with the default values.
+This template does not automatically set up readthedocs.org integration. In order to do that, go to https://readthedocs.org/dashboard/import/, click "AmbitionEng", and refresh the repositories. Import the project with the default values.
 
 Once the project has been followed, go to https://readthedocs.org/dashboard/{project_name}/rules/regex/create/ and under "version type" choose "tag" and choose "activate version" as the rule. After this, create a new rule with the same settings, except choose "Set version as default".
 
@@ -57,7 +57,7 @@ ReadTheDocs builds should happen automatically after the first version is publis
 
 ## An Important Note to Users
 
-It is important to keep any changes to the templated files of this project to a minimum, otherwise `footing update` will produce diffs that can be difficult to merge. Along with that, minimally editing the templated files ensures that your Python library project behaves similarly to all of the other ones at Opus 10. If there is an error in the templated files or a change that needs to be propagated to every package (e.g. updating Python), then the change should be made in this template repository.
+It is important to keep any changes to the templated files of this project to a minimum, otherwise `footing update` will produce diffs that can be difficult to merge. Along with that, minimally editing the templated files ensures that your Python library project behaves similarly to all of the other ones at Ambition. If there is an error in the templated files or a change that needs to be propagated to every package (e.g. updating Python), then the change should be made in this template repository.
 
 ## Technical Decisions and How To
 

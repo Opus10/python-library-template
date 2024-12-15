@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Prompts the user and runs project setup during ``footing setup``"""
+
 import os
 import pathlib
 import re
@@ -16,7 +17,7 @@ IS_DJANGO = "{{ cookiecutter.is_django }}" == "True"
 CHECK_TYPES_IN_CI = "{{ cookiecutter.check_types_in_ci }}" == "True"
 FOOTING_ENV_VAR = "_FOOTING"
 GITHUB_API_TOKEN_ENV_VAR = "GITHUB_API_TOKEN"
-GITHUB_ORG_NAME = "Opus10"
+GITHUB_ORG_NAME = "AmbitionEng"
 GITHUB_REPO_API = f"/orgs/{GITHUB_ORG_NAME}/repos"
 CIRCLECI_API_TOKEN_ENV_VAR = "CIRCLECI_API_TOKEN"
 
@@ -378,7 +379,7 @@ def footing_setup():
 
     get_user_input(
         "Final step! Go to"
-        " https://github.com/Opus10/python-library-template"
+        " https://github.com/AmbitionEng/python-library-template"
         "#readthedocs-setup"
         " and read the instructions for ReadTheDocs integration. If you bypass"
         ' this step, your docs will not build properly. Hit "return" after'
@@ -396,7 +397,7 @@ if __name__ == "__main__":
     if not os.getenv(FOOTING_ENV_VAR):
         print(
             "This template can only be used with footing for project spin up. "
-            "Consult the footing docs at https://github.com/Opus10/footing"
+            "Consult the footing docs at https://github.com/AmbitionEng/footing"
         )
         sys.exit(1)
 
@@ -405,7 +406,7 @@ if __name__ == "__main__":
     # footing commands (e.g ``footing update``)
     if os.getenv(FOOTING_ENV_VAR) == "setup":
         prompt_msg = (
-            f'Your Opus 10 Github repo name will be "{REPO_NAME}"'
+            f'Your Ambition Github repo name will be "{REPO_NAME}"'
             f' and packages will be installed with "pip install {REPO_NAME}".'
             f' Python imports will happen as "import {MODULE_NAME}".'
             " It is very difficult to change these names after the project"

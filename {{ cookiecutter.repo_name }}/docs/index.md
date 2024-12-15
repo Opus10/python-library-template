@@ -1,6 +1,6 @@
 # {{ cookiecutter.repo_name }}
 
-Welcome to the docs for `{{ cookiecutter.repo_name }}`! It doesn't appear that the author has created any docs for their project yet. Try viewing the [README](https://github.com/Opus10/{{ cookiecutter.repo_name }}) of their project for documentation.
+Welcome to the docs for `{{ cookiecutter.repo_name }}`! It doesn't appear that the author has created any docs for their project yet. Try viewing the [README](https://github.com/AmbitionEng/{{ cookiecutter.repo_name }}) of their project for documentation.
 
 ## Compatibility
 

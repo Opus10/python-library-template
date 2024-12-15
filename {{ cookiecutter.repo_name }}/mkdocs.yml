@@ -1,8 +1,8 @@
 site_name: {{ cookiecutter.repo_name }}
 docs_dir: docs
 
-repo_name: Opus10/{{ cookiecutter.repo_name }}
-repo_url: https://github.com/Opus10/{{ cookiecutter.repo_name }}
+repo_name: AmbitionEng/{{ cookiecutter.repo_name }}
+repo_url: https://github.com/AmbitionEng/{{ cookiecutter.repo_name }}
 
 plugins:
   - search

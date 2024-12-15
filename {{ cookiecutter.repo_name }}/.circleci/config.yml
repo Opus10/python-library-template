@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  opus10:
+  ambitioneng:
     executors:
       python:
         working_directory: /code
@@ -41,27 +41,27 @@ jobs:
   {%- if cookiecutter.is_django == "True" %}
   test_pg_min:
     executor:
-      name: opus10/python
+      name: ambitioneng/python
       pg_version: "13.16"
     steps:
-      - opus10/test
+      - ambitioneng/test
 
   test_pg_max:
     executor:
-      name: opus10/python
+      name: ambitioneng/python
       pg_version: "17.0"
     steps:
-      - opus10/test
+      - ambitioneng/test
   {%- else %}
   test:
     executor:
-      name: opus10/python
+      name: ambitioneng/python
     steps:
-      - opus10/test
+      - ambitioneng/test
   {%- endif %}
 
   lint:
-    executor: opus10/python
+    executor: ambitioneng/python
     steps:
       - checkout
       - restore_cache:
@@ -70,7 +70,7 @@ jobs:
       - run: make lint
 
   type_check:
-    executor: opus10/python
+    executor: ambitioneng/python
     steps:
       - checkout
       - restore_cache:
@@ -79,7 +79,7 @@ jobs:
       - run: make type-check {% if not cookiecutter.check_types_in_ci == 'True' %}|| true{% endif %}
 
   deploy:
-    executor: opus10/python
+    executor: ambitioneng/python
     steps:
       - checkout
       - run: ssh-add -D
